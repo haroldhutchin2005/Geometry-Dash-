@@ -7,7 +7,7 @@ module.exports.config = {
       usePrefix: true,
     commandCategory: "Risk",
     usages: "[on/off]",
-    cooldowns: 60
+    cooldowns: 10
 };
 async function getUserName(api, senderID) {
   try {
