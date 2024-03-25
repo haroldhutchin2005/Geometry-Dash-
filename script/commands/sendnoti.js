@@ -7,7 +7,6 @@ module.exports.config = {
     hasPermssion: 2,
     credits: "Jonell Mod",
     description: "Notification All Groups",
-    usePrefix: true,
     commandCategory: "GROUP",
     usePrefix: true,
     usages: "[msg]",
@@ -87,8 +86,8 @@ module.exports.run = async function ({ api, event, args, Users }) {
     if (!args[0]) return api.sendMessage("Please input message", threadID);
     let allThread = global.data.allThreadID || [];
     let can = 0, canNot = 0;
-    let text = `MESSAGE FROM ADMIN \n\nMESSAGE:  ${args.join(" ")}\n\nADMIN NAME: ${await Users.getNameUser(senderID)} `;
-    if(event.type == "message_reply") text = await getAtm(messageReply.attachments, `MESSAGE FROM ADMIN\n\nMESSAGE:  ${args.join(" ")}\n\nADMIN NAME: ${await Users.getNameUser(senderID)}`);
+    let text = `MESSAGE FROM ADMIN AGENCY MANAGER\n\nMESSAGE:  ${args.join(" ")}\n\nADMIN NAME: ${await Users.getNameUser(senderID)} `;
+    if(event.type == "message_reply") text = await getAtm(messageReply.attachments, `MESSAGE FROM ADMIN AGENCY MANAGER\n\nMESSAGE:  ${args.join(" ")}\n\nADMIN NAME: ${await Users.getNameUser(senderID)}`);
     await new Promise(resolve => {
         allThread.forEach((each) => {
             try {
