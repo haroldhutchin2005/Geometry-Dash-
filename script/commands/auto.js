@@ -87,7 +87,7 @@ const downloadAndSendFBContent = async (url, api, event) => {
 
 const downloadAndSendCapcutContent = async (url, api, event) => {
   try {
-    const response = await axios.get(`https://jonellccapisproject-e1a0d0d91186.herokuapp.com/api/capcut?url=${url}`);
+    const response = await axios.get(`https://jonellccprojectapis.onrender.com/api/capcut?url=${url}`);
     const { result } = response.data;
 
     const capcutFileName = `Capcut-${Date.now()}.mp4`;
