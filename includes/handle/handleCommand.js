@@ -57,7 +57,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
         if (checker.bestMatch.rating >= 0.5) {
           command = commands.get(checker.bestMatch.target); 
         } else {
-          return api.sendMessage(`Hello user I'm ${global.config.BOTNAME} BOT How can you assist today?\nType ${global.config.PREFIX}help to view all commands\n\nDate:\n${time}`, threadID, messageID); 
+          return api.sendMessage(`The command you type not found! type ${global.config.PREFIX}help to see all commands\n\nDate:\n${time}`, threadID, messageID); 
         }
       }
     }
@@ -80,7 +80,7 @@ module.exports = function({ api, models, Users, Threads, Currencies }) {
 
     if (command && command.config) {
       if (command.config.usePrefix === false && commandName.toLowerCase() !== command.config.name.toLowerCase()) {
-        api.sendMessage(global.getText("handleCommand", "notMatched", command.config.name), event.threadID, event.messageID);
+        api.sendMessage(`📝 | The command "${command.config.name}" has no needed a prefix`, event.threadID, event.messageID);
         return;
       }
       if (command.config.usePrefix === true && !body.startsWith(PREFIX)) {
@@ -102,6 +102,7 @@ if (!command) {
             (cmd.config.aliases && cmd.config.aliases.includes(commandName) && cmd.config.usePrefix === false && !body.startsWith(PREFIX)) ||
             (cmd.config.name.toLowerCase() === commandName.toLowerCase())
         ));
+      api.sendMessage(`✒️ | The command "${command.config.name}" has needed a prefix`, event.threadID, event.messageID);
     }
 }
 if (!command) {
@@ -131,7 +132,7 @@ if (!command) {
     if (ADMINBOT.includes(senderID.toString())) permssion = 2;
     else if (!ADMINBOT.includes(senderID) && find) permssion = 1; 
     if (command && command.config && command.config.hasPermssion && command.config.hasPermssion > permssion) { 
-      return api.sendMessage(`📫 | You have Not Authorize use this command "${command.config.name}" `, event.threadID, event.messageID); 
+      return api.sendMessage(`🔑 | You have no permission use this command"${command.config.name}" `, event.threadID, event.messageID); 
     }
 
     if (command && command.config && !client.cooldowns.has(command.config.name)) {
@@ -140,11 +141,28 @@ if (!command) {
 
     const timestamps = command && command.config ? client.cooldowns.get(command.config.name) : undefined;
 
-    const expirationTime = (command && command.config && command.config.cooldowns || 1) * 1000;
+    const cooldownDuration = command && command.config ? command.config.cooldowns : 1;
+    const expirationTime = cooldownDuration * 1000;
 
-    if (timestamps && timestamps instanceof Map && timestamps.has(senderID) && dateNow < timestamps.get(senderID) + expirationTime)
+    if (timestamps && timestamps instanceof Map && timestamps.has(senderID) && dateNow < timestamps.get(senderID) + expirationTime) {
+      const remainingTime = (timestamps.get(senderID) + expirationTime - dateNow) / 1000;
 
-      return api.sendMessage(`⏱️ | The command you use "${command.config.name}" has been cooldown just wait in ${command.config.cooldowns} seconds`, event.threadID, event.messageID);
+      const jonell = `⏱️ | The command you use "${command.config.name}" has been cooldown just wait in ${remainingTime.toFixed(2)} seconds to reuse it again.`;
+      
+      return api.sendMessage(jonell, event.threadID, event.messageID)
+        .then(messageInfo => {
+          setTimeout(() => {
+            api.unsendMessage(jonell.messageID);
+          }, 10000); 
+          return messageInfo;
+        })
+        .catch(error => {
+          console.error("Error sending or deleting message:", error);
+        });
+    }
+
+
+
     var getText2;
     if (command && command.languages && typeof command.languages === 'object' && command.languages.hasOwnProperty(global.config.language))
 
